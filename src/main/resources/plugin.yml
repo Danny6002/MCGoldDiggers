@@ -1,0 +1,4 @@
+name: MCGoldDiggers
+version: '${project.version}'
+main: nl.clevernode.mcgolddiggers.MCGoldDiggers
+api-version: '1.20'
