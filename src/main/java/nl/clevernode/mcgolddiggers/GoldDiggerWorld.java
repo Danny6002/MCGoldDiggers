@@ -2,7 +2,6 @@ package nl.clevernode.mcgolddiggers;
 
 import org.bukkit.*;
 import org.bukkit.entity.Player;
-import org.bukkit.generator.ChunkGenerator;
 
 public class GoldDiggerWorld {
 
