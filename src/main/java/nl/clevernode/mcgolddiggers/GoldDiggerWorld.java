@@ -8,7 +8,6 @@ import org.bukkit.block.sign.Side;
 import org.bukkit.block.sign.SignSide;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import static org.bukkit.Bukkit.getLogger;
@@ -16,14 +15,14 @@ import static org.bukkit.Bukkit.getLogger;
 public class GoldDiggerWorld {
 
     private final String worldName = "MCGoldDiggers";
-
-    private JavaPlugin plugin;
+    private final JavaPlugin plugin;
+    private final Integer groundLevel = -62;
 
     GoldDiggerWorld(JavaPlugin plugin) {
         this.plugin = plugin;
     }
 
-    private World getWorld() {
+    public World getWorld() {
         return Bukkit.getWorld(this.worldName);
     }
 
@@ -39,6 +38,7 @@ public class GoldDiggerWorld {
             side.setLine(3, "BEGIN SPEL");
 
             sign.setMetadata("START_SIGN", new FixedMetadataValue(this.plugin, true));
+            sign.setMetadata("UNBREAKABLE", new FixedMetadataValue(this.plugin, true));
 
             sign.update();
         }
@@ -49,6 +49,14 @@ public class GoldDiggerWorld {
         startingBlock.setType(Material.OAK_SIGN);
 
         setupSign(startingBlock);
+
+        Block torchLeftBlock = this.getTorchLocation(-1).getBlock();
+        torchLeftBlock.setType(Material.TORCH);
+        torchLeftBlock.setMetadata("UNBREAKABLE", new FixedMetadataValue(this.plugin, true));
+
+        Block torchRightBlock = this.getTorchLocation(1).getBlock();
+        torchRightBlock.setType(Material.TORCH);
+        torchRightBlock.setMetadata("UNBREAKABLE", new FixedMetadataValue(this.plugin, true));
 
         getLogger().info("Spawn starting point");
     }
@@ -73,12 +81,20 @@ public class GoldDiggerWorld {
         this.createStartingPoint();
     }
 
+    public Integer getGroundLevel() {
+        return this.groundLevel;
+    }
+
+    public Location getTorchLocation(int offset) {
+        return new Location(this.getWorld(), offset, this.getGroundLevel(), 2);
+    }
+
     public Location getStartPointLocation() {
-        return new Location(this.getWorld(), 0, -62, 2);
+        return new Location(this.getWorld(), 0, this.getGroundLevel(), 2);
     }
 
     public Location getStandardLocation() {
-        return new Location(this.getWorld(), 0, -60, 0);
+        return new Location(this.getWorld(), 0, this.getGroundLevel(), 0);
     }
 
     public void sendToStandardLocation(Player player) {

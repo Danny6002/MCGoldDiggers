@@ -6,7 +6,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -14,15 +13,15 @@ import org.bukkit.metadata.MetadataValue;
 
 import java.util.List;
 
-import static org.bukkit.Bukkit.getLogger;
-
 public class EventListeners implements Listener {
 
     private final GoldDiggerWorld world;
+    private final MiniGame game;
 
-    EventListeners(GoldDiggerWorld world) {
+    EventListeners(GoldDiggerWorld world, MiniGame game) {
         super();
         this.world = world;
+        this.game = game;
     }
 
     @EventHandler
@@ -40,9 +39,8 @@ public class EventListeners implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         Block block = event.getBlock();
 
-        if (isStartSign(block)) {
+        if (isUnbreakable(block)) {
             event.setCancelled(true);
-            this.world.setupSign(block);
         }
     }
 
@@ -58,20 +56,30 @@ public class EventListeners implements Listener {
         }
 
         event.setCancelled(true);
+
+        this.game.teleportToMinigame(event.getPlayer());
+    }
+
+    private Boolean isUnbreakable(Block block) {
+        return getBooleanMetadata(block, "UNBREAKABLE");
     }
 
     private Boolean isStartSign(Block block) {
+        return getBooleanMetadata(block, "START_SIGN");
+    }
+
+    private Boolean getBooleanMetadata(Block block, String name) {
         if (block == null) {
             return false;
         }
 
-        List<MetadataValue> metadata = block.getMetadata("START_SIGN");
+        List<MetadataValue> metadata = block.getMetadata(name);
 
         if (metadata.isEmpty()) {
             return false;
         }
 
-        MetadataValue data = block.getMetadata("START_SIGN").get(0);
+        MetadataValue data = block.getMetadata(name).get(0);
 
         return data != null && data.asBoolean();
     }
