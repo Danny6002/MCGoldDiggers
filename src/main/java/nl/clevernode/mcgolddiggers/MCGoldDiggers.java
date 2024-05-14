@@ -4,7 +4,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class MCGoldDiggers extends JavaPlugin {
 
-    GoldDiggerWorld world = new GoldDiggerWorld();
+    GoldDiggerWorld world = new GoldDiggerWorld(this);
 
     @Override
     public void onEnable() {
