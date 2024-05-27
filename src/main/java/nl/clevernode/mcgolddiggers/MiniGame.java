@@ -54,6 +54,7 @@ public class MiniGame {
         materials.add(Material.COAL_BLOCK);
         materials.add(Material.OBSIDIAN);
 
+        // create outer barrier walls
         for (int k = 0; k < materials.size() + wallHeight; k++) {
             for (int i = 0; i < fieldSize; i++) {
                 for (int j = 0; j < fieldSize; j++) {
@@ -88,6 +89,7 @@ public class MiniGame {
             }
         }
 
+        // create block floors
         for (int i = 0; i < fieldSize; i++) {
             for (int j = 0; j < fieldSize; j++) {
                 for (int k = 0; k < materials.size(); k++) {
